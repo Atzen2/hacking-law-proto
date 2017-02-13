@@ -1,0 +1,204 @@
+{
+  "contract_name": "EmployeeWallet",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "employerAddress",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "resetWallet",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_workHours",
+          "type": "uint32"
+        }
+      ],
+      "name": "allowWorking",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "hWage",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amount",
+          "type": "uint32"
+        }
+      ],
+      "name": "sendMoney",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "workHours",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "moneyOk",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "access",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "employee",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "validContract",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "balance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_employerAddress",
+          "type": "address"
+        },
+        {
+          "name": "_hWage",
+          "type": "uint32"
+        }
+      ],
+      "name": "validContract",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_name",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "type": "fallback"
+    }
+  ],
+  "unlinked_binary": "0x6060604052346100005760405161062f38038061062f833981016040528051015b60008054600160a060020a03191633600160a060020a031617815581516002805492819052917f405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5ace602061010060018416150260001901909216849004601f908101839004820193928601908390106100a357805160ff19168380011785556100d0565b828001600101855582156100d0579182015b828111156100d05782518255916020019190600101906100b5565b5b506100f19291505b808211156100ed57600081556001016100d9565b5090565b5050600380546001607860020a03191690555b505b61051a806101156000396000f300606060405236156100a95763ffffffff60e060020a60003504166306fdde0381146100b25780630d0175a91461013f5780631895e85814610168578063282440ed1461017757806350f45baf1461018f57806358a356d0146101b557806363076e13146101cd5780636f4d3e52146101f357806371907f1714610214578063a0a1a7d714610235578063a9a727e71461025e578063b69ef8a81461027f578063d035bed4146102a5575b6100b05b5b565b005b34610000576100bf6102c9565b604080516020808252835181830152835191928392908301918501908083838215610105575b80518252602083111561010557601f1990920191602091820191016100e5565b505050905090810190601f1680156101315780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b346100005761014c610354565b60408051600160a060020a039092168252519081900360200190f35b34610000576100b0610363565b005b34610000576100b063ffffffff6004351661037e565b005b346100005761019c6103a9565b6040805163ffffffff9092168252519081900360200190f35b34610000576100b063ffffffff600435166103c3565b005b346100005761019c610425565b6040805163ffffffff9092168252519081900360200190f35b3461000057610200610437565b604080519115158252519081900360200190f35b3461000057610200610452565b604080519115158252519081900360200190f35b346100005761014c610460565b60408051600160a060020a039092168252519081900360200190f35b346100005761020061046f565b604080519115158252519081900360200190f35b346100005761019c610478565b6040805163ffffffff9092168252519081900360200190f35b34610000576100b0600160a060020a036004351663ffffffff6024351661048e565b005b6002805460408051602060018416156101000260001901909316849004601f8101849004840282018401909252818152929183018282801561034c5780601f106103215761010080835404028352916020019161034c565b820191906000526020600020905b81548152906001019060200180831161032f57829003601f168201915b505050505081565b600154600160a060020a031681565b600380546effffffffffffffffffffffffffffff191690555b565b6003805461010061ff00199091161765ffffffff000019166201000063ffffffff8416021790555b50565b6003546a0100000000000000000000900463ffffffff1681565b60035463ffffffff82811662010000830482166a01000000000000000000009093048216929092021614156103a6576003805463ffffffff6601000000000000808304821685019091160269ffffffff000000000000199091161790555b5b50565b60035462010000900463ffffffff1681565b6003546e010000000000000000000000000000900460ff1681565b600354610100900460ff1681565b600054600160a060020a031681565b60035460ff1681565b6003546601000000000000900463ffffffff1681565b600380546001805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a03861617815560ff19909116176dffffffff0000000000000000000019166a010000000000000000000063ffffffff8416021790555b50505600a165627a7a72305820c74d09a99db29e51613a67f91098dd9c18c90ac2a998976d159af70c5016a8820029",
+  "networks": {
+    "1486815315121": {
+      "events": {},
+      "links": {},
+      "address": "0x5e9a6116850c89ecf1eba6fca05524c929528d29",
+      "updated_at": 1486818432295
+    },
+    "1487020018877": {
+      "events": {},
+      "links": {},
+      "address": "0xe532c915dd5cbb98a945090b703ac0b4e23ef5b5",
+      "updated_at": 1487020030085
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1487020030085
+}

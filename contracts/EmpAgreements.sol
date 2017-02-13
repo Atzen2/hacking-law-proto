@@ -1,11 +1,17 @@
 pragma solidity ^0.4.8;
 
+import "./EmployeeWallet.sol";
+import "./AgencyWallet.sol";
+
 
 contract EmpAgreements {
 	EA[]  eAs;
 	uint32 idCnt;
+	bool plAAdressSet;
     
 	address public employer;
+	address public employerWallet;
+	address public plAAdress;
 
 	struct EA {
 		uint32 id;
@@ -16,19 +22,33 @@ contract EmpAgreements {
 		
 		string emplyeName;
 		address emplyeAdress;
-		uint emplyeHWage;
+		uint32 emplyeHWage;
 		bool emplyeSigned;
+		string attachment;
+		address emplyeWalletAdress;
 	}
 
 
+	function () payable {
 
-	function EmpAgreements() {
+	}
+
+
+	function EmpAgreements(address _employerWallet) {
 		idCnt = 0;
 		employer = msg.sender;
+		employerWallet = _employerWallet;
+		plAAdressSet = false;
 	}
 
 
-	function addEA(string _empArgName, string _emplyrName, string _emplyeName, uint _emplyeHWage, address _emplyeAdress) returns (bool success, uint32 id) {
+	function setPlAAdress(address _plAAddress) {
+			plAAdress = _plAAddress;
+			plAAdressSet == true;
+	}
+
+
+	function addEA(string _empArgName, string _emplyrName, string _emplyeName, uint32 _emplyeHWage, address _emplyeAdress, address _emplyeWalletAdress, string _attachment) returns (bool success, uint32 id) {
 		if(msg.sender != employer|| msg.sender == _emplyeAdress) return (false, 0);
 
 
@@ -47,6 +67,8 @@ contract EmpAgreements {
 		newEA.emplyeName = _emplyeName;
 		newEA.emplyeAdress = _emplyeAdress;
 		newEA.emplyeHWage = _emplyeHWage;
+		newEA.attachment = _attachment;
+		newEA.emplyeWalletAdress = _emplyeWalletAdress;
 
 		eAs.push(newEA);
 
@@ -54,37 +76,34 @@ contract EmpAgreements {
 	}
 
 
-    function getState(uint32 _id) returns (bool success, bool success2) {
-        for(uint i = 0; i < eAs.length; i++){
-			if(eAs[i].id == _id) {
-			    return (eAs[i].emplyrSigned, eAs[i].emplyeSigned);
-			}
-        }
-    }
-
-
-	function signEA(uint32 _id) returns (bool success){
+	function signEA(uint32 _id){
 		for(uint i = 0; i < eAs.length; i++){
 			if(eAs[i].id == _id) {
 			    
 				if(msg.sender == employer && !eAs[i].emplyrSigned) {
 					eAs[i].emplyrSigned = true;
-					return (true);
 				}
 				
 				if(msg.sender == eAs[i].emplyeAdress && !eAs[i].emplyeSigned) {
 					eAs[i].emplyeSigned = true;
-					return (true);
+				}
+
+				if(eAs[i].emplyrSigned && eAs[i].emplyeSigned){
+					
+					EmployeeWallet ew = EmployeeWallet(eAs[i].emplyeWalletAdress);
+					ew.validContract( employer, eAs[i].emplyeHWage);
+
+					AgencyWallet aw = AgencyWallet(employerWallet);
+					aw.validEAContract(eAs[i].emplyeHWage, eAs[i].emplyeWalletAdress);
 				}
 			}
 		}
-		return (false);
 	}
 
 
 	function removeEA(uint32 _id) returns (bool success){
 		for(uint i = 0; i < eAs.length; i++){
-			if(eAs[i].id == _id) {
+			if(eAs[i].id == _id && msg.sender == employer) {
 				delete eAs[i];
 				return (true);
 			} 
@@ -93,11 +112,11 @@ contract EmpAgreements {
 	}
 
 
-	function getEAAttributes(uint32 _id) constant returns (string empArgName, string emplyrNames, string emplyeNames, uint emplyeHWage){
+	function getEAAttributes(uint32 _id) constant returns (string empArgName, string emplyrNames, string emplyeNames, uint emplyeHWage, string attachment){
 		for(uint i = 0; i < eAs.length; i++){
 			if(eAs[i].id == _id) {
 		        if(msg.sender == employer || msg.sender == eAs[i].emplyeAdress){
-				    return (eAs[i].empArgName, eAs[i].emplyrName, eAs[i].emplyeName, eAs[i].emplyeHWage);
+				    return (eAs[i].empArgName, eAs[i].emplyrName, eAs[i].emplyeName, eAs[i].emplyeHWage, eAs[i].attachment);
 		        }
 			} 
 		}

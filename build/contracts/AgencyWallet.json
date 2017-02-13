@@ -1,0 +1,177 @@
+{
+  "contract_name": "AgencyWallet",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "resetWallet",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "pipeMoney",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_emplyeHWage",
+          "type": "uint32"
+        },
+        {
+          "name": "_employeeAddress",
+          "type": "address"
+        }
+      ],
+      "name": "validEAContract",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "emplyeHWage",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "workHours",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "validEAContract",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_emplyeHWage2",
+          "type": "uint32"
+        },
+        {
+          "name": "_workHours",
+          "type": "uint32"
+        }
+      ],
+      "name": "validPLAContract",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "balance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "validPLAContract",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "emplyeHWage2",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_name",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "type": "fallback"
+    }
+  ],
+  "unlinked_binary": "0x60606040523461000057604051610654380380610654833981016040528051015b60008054600160a060020a03191633600160a060020a031617815581516002805481845283927f405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5ace602061010060018516150260001901909316849004601f9081018490048201938801908390106100a257805160ff19168380011785556100cf565b828001600101855582156100cf579182015b828111156100cf5782518255916020019190600101906100b4565b5b506100f09291505b808211156100ec57600081556001016100d8565b5090565b50506003805471ffffffff0000000000000000ffffffffffff191690555060009050805b5050505b61052d806101276000396000f300606060405236156100935763ffffffff60e060020a60003504166306fdde03811461009c5780631895e858146101295780631e4f95c7146101385780633494ab3d14610147578063498f3fb71461016b57806363076e1314610191578063928d6157146101b7578063a426cd19146101d8578063b69ef8a8146101f6578063e69318a91461021c578063f8f215d31461023d575b61009a5b5b565b005b34610000576100a9610263565b6040805160208082528351818301528351919283929083019185019080838382156100ef575b8051825260208311156100ef57601f1990920191602091820191016100cf565b505050905090810190601f16801561011b5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b346100005761009a6102ee565b005b346100005761009a61030c565b005b346100005761009a63ffffffff60043516600160a060020a03602435166103d9565b005b3461000057610178610433565b6040805163ffffffff9092168252519081900360200190f35b3461000057610178610449565b6040805163ffffffff9092168252519081900360200190f35b34610000576101c461045c565b604080519115158252519081900360200190f35b346100005761009a63ffffffff60043581169060243516610465565b005b34610000576101786104c7565b6040805163ffffffff9092168252519081900360200190f35b34610000576101c46104d9565b604080519115158252519081900360200190f35b34610000576101786104e7565b6040805163ffffffff9092168252519081900360200190f35b6002805460408051602060018416156101000260001901909316849004601f810184900484028201840190925281815292918301828280156102e65780601f106102bb576101008083540402835291602001916102e6565b820191906000526020600020905b8154815290600101906020018083116102c957829003601f168201915b505050505081565b6003805471ffffffffffffffffffffffffffffffffffff191690555b565b6003805465ffffffff0000198116607060020a820463ffffffff90811666010000000000008404821681026a0100000000000000000000850483169091028181036201000095869004841601831690940292909217909355600154604080517f58a356d00000000000000000000000000000000000000000000000000000000081529483166004860152519193600160a060020a039091169182916358a356d091602480830192600092919082900301818387803b156100005760325a03f115610000575050505b505050565b60038054600169ffffffff00000000000019909116660100000000000063ffffffff8616021760ff19168117909155805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5050565b6003546601000000000000900463ffffffff1681565b600354607060020a900463ffffffff1681565b60035460ff1681565b6003805463ffffffff838116607060020a0271ffffffff0000000000000000000000000000199186166a0100000000000000000000026dffffffff000000000000000000001961ff0019909416610100179390931692909217161790555b5050565b60035462010000900463ffffffff1681565b600354610100900460ff1681565b6003546a0100000000000000000000900463ffffffff16815600a165627a7a7230582026967e7ca661cfa4f1636e75a6d739d86ae64b741c8f3e9c1014c16444b2c7910029",
+  "networks": {
+    "1486815315121": {
+      "events": {},
+      "links": {},
+      "address": "0x1452a036efdfcd92d30df2182c2ab0f1cfaefd8e",
+      "updated_at": 1486818432293
+    },
+    "1487020018877": {
+      "events": {},
+      "links": {},
+      "address": "0xf4a90faf6720d3a4bcffdb34909a95c5c647c75a",
+      "updated_at": 1487020030088
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1487020030088
+}
