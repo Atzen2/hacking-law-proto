@@ -3,7 +3,12 @@ This is a simple example of creating and using a smart Contract.
 You can create a smart contract, view it's public test variable and toggle it.
 
 Requirements:
-testrpc must be running
+run testrpc (https://github.com/ethereumjs/testrpc)
+	$ testrpc 
+
+run meteor (https://www.meteor.com/install)
+	$ meteor
+
 
 
 
