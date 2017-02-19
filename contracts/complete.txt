@@ -1,0 +1,432 @@
+pragma solidity ^0.4.8;
+
+
+contract AgencyWallet {
+	address agency; // agency account address
+	address employeeAddress;
+	string public name;
+	bool public validEAContract; 
+	bool public validPLAContract;
+	uint32 public balance;
+	uint32 public emplyeHWage;
+	uint32 public emplyeHWage2; // from manufacturer point of view
+	uint32 public workHours;
+	
+
+	/* Constructor */
+	function AgencyWallet(string _name) {
+		agency = msg.sender;
+		name = _name;
+
+		/* initialization */
+		validEAContract = false;
+		validPLAContract = false;
+		uint32 emplyeHWage = 0;
+		uint32 emplyeHWage2 = 0;
+		balance = 0;
+		workHours = 0;
+	}
+
+
+
+	function resetWallet() {
+		validEAContract = false;
+		validPLAContract = false;
+		balance = 0;
+		emplyeHWage = 0;
+		emplyeHWage2 = 0;
+		workHours = 0;
+	}
+
+
+	/* function to enable ether reception */
+	function () payable {
+
+	}
+
+
+	/* called from PLAgreement contract
+		used to split money and send rest to employee */
+	function pipeMoney(){
+		uint32 money1 = emplyeHWage * workHours;
+		uint32 money2 = emplyeHWage2 * workHours;
+		
+		balance += money2 - money1;
+
+		EmployeeWallet ew = EmployeeWallet(employeeAddress);
+		ew.sendMoney(money1);
+	}
+
+
+	/* called from EmpAgreements contract 
+		bestätigt Gültiglkeit des Arbeitsvertrags */
+	function validEAContract(uint32 _emplyeHWage, address _employeeAddress) {
+		emplyeHWage = _emplyeHWage;
+		validEAContract = true;
+		employeeAddress = _employeeAddress;
+	}
+
+
+	/* called from PLAgreements contract 
+		bestätigt Gültiglkeit des Zeitarbeitsvertrags */
+	function validPLAContract(uint32 _emplyeHWage2, uint32 _workHours) {
+		validPLAContract = true;
+		emplyeHWage2 = _emplyeHWage2;
+		workHours = _workHours;
+	}
+}
+
+
+contract EmpAgreements {
+	EA[]  eAs;
+	uint32 idCnt;
+	bool plAAdressSet;
+    
+	address public agency;
+	address public agencyWallet;
+	address public plAAdress;
+
+	struct EA {
+		uint32 id;	// id des Arbeitsvertrages
+		string eAName; // employee agreements name
+		
+		string agencyName;
+		bool agencySigned;
+		
+		string emplyeName;
+		address emplyeAdress;
+		uint32 emplyeHWage;
+		bool emplyeSigned;
+		string attachment; // etwas was man noch dazu packen kann (z.B. Hash des Vertrages)
+		address emplyeWalletAdress;
+	}
+
+
+	function () payable {
+
+	}
+
+
+	function EmpAgreements(address _agencyWallet) {
+		idCnt = 0;
+		agency = msg.sender;
+		agencyWallet = _agencyWallet;
+		plAAdressSet = false;
+	}
+
+
+	/* must be called after PLAgreements contract is deployed */
+	function setPlAAdress(address _plAAddress) {
+			plAAdress = _plAAddress;
+			plAAdressSet = true;
+	}
+
+
+	function addEA(string _eAName, string _agencyName, string _emplyeName, uint32 _emplyeHWage, address _emplyeAdress, address _emplyeWalletAdress, string _attachment) returns (bool success, uint32 id) {
+		if(msg.sender != agency) return (false, 0);
+
+
+		EA memory newEA;
+		
+		idCnt++;
+
+		newEA.id = idCnt;
+
+		newEA.eAName = _eAName;
+
+		newEA.agencySigned = false;
+		newEA.agencyName = _agencyName;
+
+		newEA.emplyeSigned = false;
+		newEA.emplyeName = _emplyeName;
+		newEA.emplyeAdress = _emplyeAdress;
+		newEA.emplyeHWage = _emplyeHWage;
+		newEA.attachment = _attachment;
+		newEA.emplyeWalletAdress = _emplyeWalletAdress;
+
+		eAs.push(newEA);
+
+		return (true, idCnt);
+	}
+
+
+	function signEA(uint32 _id){
+		for(uint i = 0; i < eAs.length; i++){
+			if(eAs[i].id == _id) {
+			    
+				if(msg.sender == agency && !eAs[i].agencySigned) {
+					eAs[i].agencySigned = true;
+				}
+				
+				if(msg.sender == eAs[i].emplyeAdress && !eAs[i].emplyeSigned) {
+					eAs[i].emplyeSigned = true;
+				}
+
+				if(eAs[i].agencySigned && eAs[i].emplyeSigned){
+					
+					EmployeeWallet ew = EmployeeWallet(eAs[i].emplyeWalletAdress);
+					ew.validContract( agency, eAs[i].emplyeHWage);
+
+					AgencyWallet aw = AgencyWallet(agencyWallet);
+					aw.validEAContract(eAs[i].emplyeHWage, eAs[i].emplyeWalletAdress);
+				}
+			}
+		}
+	}
+
+
+	/* called from PLAgreements */
+	function isEASigned(uint32 _id) constant returns (bool signed) {
+		for(uint i = 0; i < eAs.length; i++){
+			if(eAs[i].id == _id && eAs[i].emplyeSigned && eAs[i].agencySigned) {
+				return (true);
+			}
+		}
+		return (false);
+	}
+}
+
+
+contract EmployeeWallet {
+	address public employee;
+	address public agencyAddress;
+	string public name;
+	bool public validContract;
+	bool public access;
+	uint32 public workHours;
+	uint32 public balance;
+	uint32 public hWage;
+	bool public moneyOk;
+	
+
+
+	function EmployeeWallet(string _name) {
+		employee = msg.sender;
+		name = _name;
+
+		/* initialization */
+		access = false;
+		workHours = 0;
+		validContract = false;
+		balance = 0;
+		hWage = 0;
+		moneyOk = false;
+	}
+
+
+	function resetWallet() {
+		access = false;
+		workHours = 0;
+		validContract = false;
+		balance = 0;
+		hWage = 0;
+		moneyOk = false;
+	}
+
+
+	/* called from PLAgreements */
+	function allowWorking(uint32 _workHours) {
+		access = true;
+		workHours = _workHours;
+	}
+
+
+	function () payable {
+
+	}
+
+
+	/* called from AgencyWallet */
+	function sendMoney(uint32 amount){
+		if(amount == workHours * hWage)
+		{
+			moneyOk = true;
+			balance += amount;
+		} 
+	}
+
+
+	/* called from EmpAgreements */
+	function validContract(address _agencyAddress, uint32 _hWage) {
+		validContract = true;
+		agencyAddress = _agencyAddress;
+		hWage = _hWage;
+	}
+}
+
+
+contract ManufactorWallet {
+	address manufactor;
+	address agencyAddress;
+	string public name;
+	bool public validContract;
+	uint32 public balance;
+	uint32 public emplyeHWage;
+	uint32 public workHours;
+	uint32 public workedHours;	
+
+
+	function ManufactorWallet(string _name) {
+		manufactor = msg.sender;
+		name = _name;
+		validContract = false;
+		uint32 emplyeHWage = 0;
+		balance = 0;
+		workHours = 0;
+		workedHours = 0;
+	}
+
+
+	function resetWallet() {
+		validContract = false;
+		uint32 emplyeHWage = 0;
+		balance = 0;
+		workHours = 0;
+		workedHours = 0;
+	}
+
+
+	/* call to increase worked hours */
+	function updateHours() {
+		if(validContract){
+			workedHours++;
+
+			if(workedHours >= workHours) {
+				balance -= workHours * emplyeHWage; 
+				
+				AgencyWallet aw = AgencyWallet(agencyAddress);
+				aw.pipeMoney();
+
+				validContract = false;
+			}
+		} 
+	}
+
+
+
+	function () payable {
+
+	}
+
+
+	/* called from PLAgreements */
+	function validContract(uint32 _emplyeHWage, uint32 _workHours, address _agencyAddress) {
+		validContract = true;
+		emplyeHWage = _emplyeHWage;
+		workHours = _workHours;
+		agencyAddress = _agencyAddress;
+	}
+}
+
+
+contract PLAgreements {
+	PA[]  pAs;
+	uint32 idCnt;
+	address public eAAdress;
+    
+	address public agency;
+	address public agencyWallet;
+
+	struct PA {
+		uint32 id;
+		uint32 eAid;
+		string plArgName;
+		
+		string emplyrName;
+		bool emplyrSigned;
+		
+		uint32 emplyeHWage;
+		uint32 emplyeHours;
+		address emplyeAdress;
+		address emplyeWalletAdress;
+		
+		string manuName;
+		address manuAdress;
+		address manuWalletAdress;
+		bool manuSigned;
+		string attachment;
+	}
+
+
+
+	function () payable {
+
+	}
+
+
+	function PLAgreements(address _eAAdress, address _agencyWallet) {
+		idCnt = 0;
+		agency = msg.sender;
+		eAAdress = _eAAdress;
+		agencyWallet = _agencyWallet;
+
+		// EmpAgreements eAs = EmpAgreements(eAAdress);
+		// eAs.setPlAAdress(this); funktioniert vielleicht
+	}
+
+
+	function addPA(string _plArgName, string _emplyrName, string _manuName, address _manuWalletAdress, address _manuAdress, uint32 _emplyeHWage, uint32 _emplyeHours, address _emplyeAdress, address _emplyeWalletAdress, uint32 _eAid, string _attachment) returns (bool success, uint32 id) {
+		if(msg.sender != agency) return (false, 0);
+
+
+		
+		PA memory newPA;
+		
+		idCnt++;
+
+		newPA.id = idCnt;
+		newPA.eAid = _eAid;
+
+		newPA.plArgName = _plArgName;
+
+		newPA.emplyrSigned = false;
+		newPA.emplyrName = _emplyrName;
+
+		newPA.manuSigned = false;
+		newPA.manuName = _manuName;
+		newPA.manuAdress = _manuAdress;
+		newPA.manuWalletAdress = _manuWalletAdress;
+
+		newPA.emplyeHWage = _emplyeHWage;
+		newPA.emplyeHours = _emplyeHours;
+		newPA.emplyeAdress = _emplyeAdress;
+		newPA.emplyeWalletAdress = _emplyeWalletAdress;
+		newPA.attachment = _attachment;
+
+		pAs.push(newPA);
+
+		return (true, idCnt);
+	}
+
+
+	function signPA(uint32 _id) {
+		for(uint i = 0; i < pAs.length; i++){
+			if(pAs[i].id == _id) {
+			    
+				if(msg.sender == agency && !pAs[i].emplyrSigned) {
+					pAs[i].emplyrSigned = true;
+				}
+				
+				if(msg.sender == pAs[i].manuAdress && !pAs[i].manuSigned) {
+					pAs[i].manuSigned = true;
+				}
+
+				if(pAs[i].emplyrSigned && pAs[i].manuSigned){
+					
+					EmpAgreements eAs = EmpAgreements(eAAdress);
+					eAs.isEASigned(pAs[i].eAid);
+					
+					EmployeeWallet ew = EmployeeWallet(pAs[i].emplyeWalletAdress);
+					ew.allowWorking(pAs[i].emplyeHours);
+
+					AgencyWallet aw = AgencyWallet(agencyWallet);
+					aw.validPLAContract(pAs[i].emplyeHWage, pAs[i].emplyeHours);
+
+					ManufactorWallet mw = ManufactorWallet(pAs[i].manuWalletAdress);
+					mw.validContract(pAs[i].emplyeHWage, pAs[i].emplyeHours, agencyWallet);
+				}
+			}
+		}
+	}
+
+}

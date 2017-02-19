@@ -11,7 +11,7 @@ contract ManufactorWallet {
 	uint32 public balance;
 	uint32 public emplyeHWage;
 	uint32 public workHours;
-	uint32 public maxHour;	
+	uint32 public workedHours;	
 
 
 	function ManufactorWallet(string _name) {
@@ -21,7 +21,7 @@ contract ManufactorWallet {
 		uint32 emplyeHWage = 0;
 		balance = 0;
 		workHours = 0;
-		maxHour = 0;
+		workedHours = 0;
 	}
 
 
@@ -30,15 +30,16 @@ contract ManufactorWallet {
 		uint32 emplyeHWage = 0;
 		balance = 0;
 		workHours = 0;
-		maxHour = 0;
+		workedHours = 0;
 	}
 
 
+	/* call to increase worked hours */
 	function updateHours() {
 		if(validContract){
-			maxHour++;
+			workedHours++;
 
-			if(maxHour >= workHours) {
+			if(workedHours >= workHours) {
 				balance -= workHours * emplyeHWage; 
 				
 				AgencyWallet aw = AgencyWallet(agencyAddress);
@@ -56,6 +57,7 @@ contract ManufactorWallet {
 	}
 
 
+	/* called from PLAgreements */
 	function validContract(uint32 _emplyeHWage, uint32 _workHours, address _agencyAddress) {
 		validContract = true;
 		emplyeHWage = _emplyeHWage;

@@ -3,22 +3,25 @@ pragma solidity ^0.4.8;
 import "./EmployeeWallet.sol";
 
 
+
 contract AgencyWallet {
-	address agency;
+	address agency; // agency account address
 	address employeeAddress;
 	string public name;
-	bool public validEAContract;
+	bool public validEAContract; 
 	bool public validPLAContract;
 	uint32 public balance;
 	uint32 public emplyeHWage;
-	uint32 public emplyeHWage2;
+	uint32 public emplyeHWage2; // from manufacturer point of view
 	uint32 public workHours;
 	
 
-
+	/* Constructor */
 	function AgencyWallet(string _name) {
 		agency = msg.sender;
 		name = _name;
+
+		/* initialization */
 		validEAContract = false;
 		validPLAContract = false;
 		uint32 emplyeHWage = 0;
@@ -26,6 +29,7 @@ contract AgencyWallet {
 		balance = 0;
 		workHours = 0;
 	}
+
 
 
 	function resetWallet() {
@@ -38,12 +42,14 @@ contract AgencyWallet {
 	}
 
 
-
+	/* function to enable ether reception */
 	function () payable {
 
 	}
 
 
+	/* called from PLAgreement contract
+		used to split money and send rest to employee */
 	function pipeMoney(){
 		uint32 money1 = emplyeHWage * workHours;
 		uint32 money2 = emplyeHWage2 * workHours;
@@ -55,12 +61,17 @@ contract AgencyWallet {
 	}
 
 
+	/* called from EmpAgreements contract 
+		bestätigt Gültiglkeit des Arbeitsvertrags */
 	function validEAContract(uint32 _emplyeHWage, address _employeeAddress) {
 		emplyeHWage = _emplyeHWage;
 		validEAContract = true;
 		employeeAddress = _employeeAddress;
 	}
 
+
+	/* called from PLAgreements contract 
+		bestätigt Gültiglkeit des Zeitarbeitsvertrags */
 	function validPLAContract(uint32 _emplyeHWage2, uint32 _workHours) {
 		validPLAContract = true;
 		emplyeHWage2 = _emplyeHWage2;

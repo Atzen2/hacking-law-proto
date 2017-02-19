@@ -3,7 +3,7 @@ pragma solidity ^0.4.8;
 
 contract EmployeeWallet {
 	address public employee;
-	address public employerAddress;
+	address public agencyAddress;
 	string public name;
 	bool public validContract;
 	bool public access;
@@ -17,6 +17,8 @@ contract EmployeeWallet {
 	function EmployeeWallet(string _name) {
 		employee = msg.sender;
 		name = _name;
+
+		/* initialization */
 		access = false;
 		workHours = 0;
 		validContract = false;
@@ -36,6 +38,7 @@ contract EmployeeWallet {
 	}
 
 
+	/* called from PLAgreements */
 	function allowWorking(uint32 _workHours) {
 		access = true;
 		workHours = _workHours;
@@ -47,18 +50,20 @@ contract EmployeeWallet {
 	}
 
 
+	/* called from AgencyWallet */
 	function sendMoney(uint32 amount){
 		if(amount == workHours * hWage)
 		{
-			moneyOk;
+			moneyOk = true;
 			balance += amount;
 		} 
 	}
 
 
-	function validContract(address _employerAddress, uint32 _hWage) {
+	/* called from EmpAgreements */
+	function validContract(address _agencyAddress, uint32 _hWage) {
 		validContract = true;
-		employerAddress = _employerAddress;
+		agencyAddress = _agencyAddress;
 		hWage = _hWage;
 	}
 }

@@ -9,8 +9,8 @@ contract PLAgreements {
 	uint32 idCnt;
 	address public eAAdress;
     
-	address public employer;
-	address public employerWallet;
+	address public agency;
+	address public agencyWallet;
 
 	struct PA {
 		uint32 id;
@@ -39,16 +39,19 @@ contract PLAgreements {
 	}
 
 
-	function PLAgreements(address _eAAdress, address _employerWallet) {
+	function PLAgreements(address _eAAdress, address _agencyWallet) {
 		idCnt = 0;
-		employer = msg.sender;
+		agency = msg.sender;
 		eAAdress = _eAAdress;
-		employerWallet = _employerWallet;
+		agencyWallet = _agencyWallet;
+
+		// EmpAgreements eAs = EmpAgreements(eAAdress);
+		// eAs.setPlAAdress(this); funktioniert vielleicht
 	}
 
 
 	function addPA(string _plArgName, string _emplyrName, string _manuName, address _manuWalletAdress, address _manuAdress, uint32 _emplyeHWage, uint32 _emplyeHours, address _emplyeAdress, address _emplyeWalletAdress, uint32 _eAid, string _attachment) returns (bool success, uint32 id) {
-		// if(msg.sender != employer|| msg.sender == _manuAdress) return (false, 0);
+		if(msg.sender != agency) return (false, 0);
 
 
 		
@@ -85,7 +88,7 @@ contract PLAgreements {
 		for(uint i = 0; i < pAs.length; i++){
 			if(pAs[i].id == _id) {
 			    
-				if(msg.sender == employer && !pAs[i].emplyrSigned) {
+				if(msg.sender == agency && !pAs[i].emplyrSigned) {
 					pAs[i].emplyrSigned = true;
 				}
 				
@@ -101,45 +104,45 @@ contract PLAgreements {
 					EmployeeWallet ew = EmployeeWallet(pAs[i].emplyeWalletAdress);
 					ew.allowWorking(pAs[i].emplyeHours);
 
-					AgencyWallet aw = AgencyWallet(employerWallet);
+					AgencyWallet aw = AgencyWallet(agencyWallet);
 					aw.validPLAContract(pAs[i].emplyeHWage, pAs[i].emplyeHours);
 
 					ManufactorWallet mw = ManufactorWallet(pAs[i].manuWalletAdress);
-					mw.validContract(pAs[i].emplyeHWage, pAs[i].emplyeHours, employerWallet);
+					mw.validContract(pAs[i].emplyeHWage, pAs[i].emplyeHours, agencyWallet);
 				}
 			}
 		}
 	}
 
 
-	function removePA(uint32 _id) returns (bool success){
-		for(uint i = 0; i < pAs.length; i++){
-			if(pAs[i].id == _id && msg.sender == employer) {
-				delete pAs[i];
-				return (true);
-			} 
-		}
-		return (false);
-	}
+	// function removePA(uint32 _id) returns (bool success){
+	// 	for(uint i = 0; i < pAs.length; i++){
+	// 		if(pAs[i].id == _id && msg.sender == agency) {
+	// 			delete pAs[i];
+	// 			return (true);
+	// 		} 
+	// 	}
+	// 	return (false);
+	// }
 
 
-	function getPAAttributes(uint32 _id) constant returns (string plArgName, string emplyrNames, string manuNames, uint emplyeHWage, uint emplyeHours, string attachment){
-		for(uint i = 0; i < pAs.length; i++){
-			if(pAs[i].id == _id) {
-		        if(msg.sender == employer || msg.sender == pAs[i].manuAdress){
-				    return (pAs[i].plArgName, pAs[i].emplyrName, pAs[i].manuName, pAs[i].emplyeHWage, pAs[i].emplyeHours, pAs[i].attachment);
-		        }
-			} 
-		}
-	}
+	// function getPAAttributes(uint32 _id) constant returns (string plArgName, string emplyrNames, string manuNames, uint emplyeHWage, uint emplyeHours, string attachment){
+	// 	for(uint i = 0; i < pAs.length; i++){
+	// 		if(pAs[i].id == _id) {
+	// 	        if(msg.sender == agency || msg.sender == pAs[i].manuAdress){
+	// 			    return (pAs[i].plArgName, pAs[i].emplyrName, pAs[i].manuName, pAs[i].emplyeHWage, pAs[i].emplyeHours, pAs[i].attachment);
+	// 	        }
+	// 		} 
+	// 	}
+	// }
 
 
-	function isPASigned(uint32 _id) constant returns (bool signed) {
-		for(uint i = 0; i < pAs.length; i++){
-			if(pAs[i].id == _id && pAs[i].manuSigned && pAs[i].emplyrSigned) {
-				return (true);
-			}
-		}
-		return (false);
-	}
+	// function isPASigned(uint32 _id) constant returns (bool signed) {
+	// 	for(uint i = 0; i < pAs.length; i++){
+	// 		if(pAs[i].id == _id && pAs[i].manuSigned && pAs[i].emplyrSigned) {
+	// 			return (true);
+	// 		}
+	// 	}
+	// 	return (false);
+	// }
 }
