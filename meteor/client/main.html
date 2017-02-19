@@ -1,0 +1,18 @@
+<head>
+  <title>myDapp</title>
+</head>
+
+<body>
+  <h1>Welcome to toggle Contract!</h1>
+  <p>1. Create an Contract via the 'createContract' button</p>
+  <p>2. toggle the value via the 'toggleValue' button</p>
+  <p>See console for more informations</p>
+
+  {{> toggleVar}}
+</body>
+
+<template name="toggleVar">
+  <p>Variable:  {{testVar}}</p>
+  <button id="createButton">createContract</button>
+  <button id="toggleButton">toggleValue</button>
+</template>
