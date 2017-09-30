@@ -49,7 +49,7 @@ contract AgencyWallet {
 
 
 	/* called from PLAgreement contract
-		used to split money and send rest to employee */
+		used to split money and send the rest to the employee */
 	function pipeMoney(){
 		uint32 money1 = emplyeHWage * workHours;
 		uint32 money2 = emplyeHWage2 * workHours;
@@ -62,7 +62,7 @@ contract AgencyWallet {
 
 
 	/* called from EmpAgreements contract 
-		bestätigt Gültiglkeit des Arbeitsvertrags */
+		confirms the validity of the employe agreement contract
 	function validEAContract(uint32 _emplyeHWage, address _employeeAddress) {
 		emplyeHWage = _emplyeHWage;
 		validEAContract = true;
@@ -71,7 +71,7 @@ contract AgencyWallet {
 
 
 	/* called from PLAgreements contract 
-		bestätigt Gültiglkeit des Zeitarbeitsvertrags */
+		confirms the validity of the temporary work contract
 	function validPLAContract(uint32 _emplyeHWage2, uint32 _workHours) {
 		validPLAContract = true;
 		emplyeHWage2 = _emplyeHWage2;
